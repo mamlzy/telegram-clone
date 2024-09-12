@@ -1,0 +1,13 @@
+node_modules
+dist
+.next
+coverage
+lib/templates
+jsconfig.json
+package.json
+README.md
+.eslintrc.*
+public/locales
+
+*.css
+*.bat

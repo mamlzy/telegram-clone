@@ -1,0 +1,73 @@
+version: '3'
+
+services:
+  app-web:
+    container_name: app-web
+    image: app-web
+    build:
+      context: .
+      dockerfile: ./apps/web/Dockerfile
+    restart: always
+    ports:
+      - 5300:3000
+    networks:
+      - app-network
+    depends_on:
+      - app-api
+
+  app-api:
+    container_name: app-api
+    image: app-api
+    build:
+      context: .
+      dockerfile: ./apps/api/Dockerfile
+    restart: always
+    ports:
+      - 5301:5000
+    volumes:
+      - app-api:/app/apps/api/public #! type volume
+    networks:
+      - app-network
+    depends_on:
+      - app-mysql
+      - app-phpmyadmin
+    env_file:
+      - ./apps/api/.env.production
+
+  app-mysql:
+    container_name: app-mysql
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+    ports:
+      - 5032:3306
+    volumes:
+      - app-mysql:/var/lib/mysql
+    networks:
+      - app-network
+
+  app-phpmyadmin:
+    container_name: app-phpmyadmin
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 5033:80
+    environment:
+      PMA_HOST: app-mysql
+    networks:
+      - app-network
+    depends_on:
+      - app-mysql
+
+networks:
+  app-network:
+    name: app-network
+
+volumes:
+  app-mysql:
+    name: app-mysql
+  app-phpmyadmin:
+    name: app-phpmyadmin
+  app-api:
+    name: app-api
