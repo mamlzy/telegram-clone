@@ -6,8 +6,7 @@
     ".": "./dist/index.js",
     "./types": "./dist/types/index.js",
     "./schemas": "./dist/schemas/index.js",
-    "./constants": "./dist/constants.js",
-    "./lib/prisma": "./dist/lib/prisma.js"
+    "./constants": "./dist/constants.js"
   },
   "scripts": {
     "dev": "tsup --watch",
