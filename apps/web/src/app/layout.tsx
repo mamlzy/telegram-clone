@@ -1,11 +1,11 @@
 import '@/styles/globals.css';
 
 import { Metadata } from 'next';
+import { Provider as TRPCProvider } from '@repo/trpc-client/provider';
 
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import ProgressBarProvider from '@/components/providers/progress-bar-provider';
-import ReactQueryProvider from '@/components/providers/react-query-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import ToastContainer from '@/components/shared/toast-container';
 
@@ -33,9 +33,9 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ReactQueryProvider>
+          <TRPCProvider>
             <ProgressBarProvider>{children}</ProgressBarProvider>
-          </ReactQueryProvider>
+          </TRPCProvider>
 
           <ToastContainer />
         </ThemeProvider>

@@ -9,25 +9,47 @@ datasource db {
 }
 
 model User {
-  id       String @id @default(cuid())
-  email    String @unique
-  password String @db.VarChar(255)
+  id    String  @id
+  name  String?
+  image String?
 
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  deletedAt DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  sessions Session[]
-
-  @@map(name: "users")
+  Credentials  Credentials?
+  AuthProvider AuthProvider?
+  Admin        Admin?
+  Manager      Manager?
 }
 
-model Session {
-  id        String   @id @default(cuid())
-  userId    String
-  expiresAt DateTime
+model Admin {
+  id   String @id
+  user User   @relation(fields: [id], references: [id])
+}
 
-  user User @relation(references: [id], fields: [userId], onDelete: Cascade)
+model Manager {
+  id   String @id
+  user User   @relation(fields: [id], references: [id])
+}
 
-  @@map("sessions")
+model Credentials {
+  id           String @id
+  user         User   @relation(fields: [id], references: [id])
+  email        String @unique
+  passwordHash String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AuthProvider {
+  id String @id
+
+  type AuthProviderType
+  user User             @relation(fields: [id], references: [id])
+}
+
+enum AuthProviderType {
+  GOOGLE
+  CREDENTIALS
 }

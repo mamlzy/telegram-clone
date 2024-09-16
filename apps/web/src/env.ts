@@ -7,13 +7,18 @@ export const env = createEnv({
     //! Database
     DATABASE_URL: z.string(),
   },
-  client: {},
+  client: {
+    NEXT_PUBLIC_CLIENT_URL: z.string(),
+  },
   runtimeEnv: {
     NODE_ENV: process.env.NODE_ENV,
 
     //* server
     //! Database
     DATABASE_URL: process.env.DATABASE_URL,
+
+    //* client
+    NEXT_PUBLIC_CLIENT_URL: process.env.NEXT_PUBLIC_CLIENT_URL,
   },
 });
 

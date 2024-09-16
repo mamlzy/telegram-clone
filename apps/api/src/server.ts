@@ -1,6 +1,7 @@
 import url from 'url';
 import { globalErrorHandler } from '@/middleware/global-error-handler.js';
 import { notFound } from '@/middleware/not-found.js';
+import { trpcExpress } from '@repo/trpc-server';
 import cookies from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -35,6 +36,7 @@ app.get('/', (_, res) => {
   });
 });
 app.use('/api', api);
+app.use('/trpc', trpcExpress);
 
 //! error handlings
 app.use(notFound);
