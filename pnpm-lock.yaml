@@ -44,9 +44,6 @@ importers:
       '@repo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@repo/trpc-server':
-        specifier: workspace:*
-        version: link:../../packages/trpc-server
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
@@ -168,9 +165,6 @@ importers:
       '@repo/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@repo/trpc-client':
-        specifier: workspace:*
-        version: link:../../packages/trpc-client
       '@t3-oss/env-nextjs':
         specifier: ^0.11.0
         version: 0.11.1(typescript@5.6.2)(zod@3.23.8)
@@ -450,59 +444,6 @@ importers:
       tsx:
         specifier: ^4.16.5
         version: 4.19.0
-
-  packages/trpc-client:
-    dependencies:
-      '@repo/trpc-server':
-        specifier: workspace:*
-        version: link:../trpc-server
-      '@tanstack/react-query':
-        specifier: ^5.52.1
-        version: 5.55.1(react@18.3.1)
-      '@trpc/client':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502(@trpc/server@11.0.0-rc.502)
-      '@trpc/react-query':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502(@tanstack/react-query@5.55.1(react@18.3.1))(@trpc/client@11.0.0-rc.502(@trpc/server@11.0.0-rc.502))(@trpc/server@11.0.0-rc.502)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
-    devDependencies:
-      '@types/react':
-        specifier: ^18.3.4
-        version: 18.3.5
-      react:
-        specifier: ^18.3.1
-        version: 18.3.1
-
-  packages/trpc-server:
-    dependencies:
-      '@paralleldrive/cuid2':
-        specifier: ^2.2.2
-        version: 2.2.2
-      '@repo/db':
-        specifier: workspace:*
-        version: link:../db
-      '@repo/shared':
-        specifier: workspace:*
-        version: link:../shared
-      '@trpc/server':
-        specifier: 11.0.0-rc.502
-        version: 11.0.0-rc.502
-      bcrypt-ts:
-        specifier: ^5.0.2
-        version: 5.0.2
-      express:
-        specifier: ^4.19.2
-        version: 4.19.2
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-    devDependencies:
-      '@types/express':
-        specifier: ^4.17.21
-        version: 4.17.21
-      '@types/jsonwebtoken':
-        specifier: ^9.0.6
-        version: 9.0.6
 
   packages/typescript-config: {}
 

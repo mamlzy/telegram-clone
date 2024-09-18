@@ -1,7 +1,6 @@
 import '@/styles/globals.css';
 
 import { Metadata } from 'next';
-import { Provider as TRPCProvider } from '@repo/trpc-client/provider';
 
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
@@ -33,9 +32,7 @@ export default async function LocaleLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCProvider>
-            <ProgressBarProvider>{children}</ProgressBarProvider>
-          </TRPCProvider>
+          <ProgressBarProvider>{children}</ProgressBarProvider>
 
           <ToastContainer />
         </ThemeProvider>

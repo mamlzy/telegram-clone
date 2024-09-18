@@ -15,7 +15,6 @@
   "dependencies": {
     "@paralleldrive/cuid2": "^2.2.2",
     "@repo/db": "workspace:*",
-    "@repo/trpc-server": "workspace:*",
     "@repo/shared": "workspace:*",
     "@repo/typescript-config": "workspace:*",
     "bcryptjs": "^2.4.3",

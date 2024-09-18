@@ -16,7 +16,6 @@
     "@hookform/resolvers": "^3.9.0",
     "@lucia-auth/adapter-prisma": "^4.0.1",
     "@radix-ui/react-slot": "^1.1.0",
-    "@repo/trpc-client": "workspace:*",
     "@repo/db": "workspace:*",
     "@repo/shared": "workspace:*",
     "@t3-oss/env-nextjs": "^0.11.0",

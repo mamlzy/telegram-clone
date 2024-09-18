@@ -9,47 +9,11 @@ datasource db {
 }
 
 model User {
-  id    String  @id
-  name  String?
-  image String?
+  id       String @id
+  name     String @db.VarChar(255)
+  email    String @unique
+  password String @db.VarChar(255)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  Credentials  Credentials?
-  AuthProvider AuthProvider?
-  Admin        Admin?
-  Manager      Manager?
-}
-
-model Admin {
-  id   String @id
-  user User   @relation(fields: [id], references: [id])
-}
-
-model Manager {
-  id   String @id
-  user User   @relation(fields: [id], references: [id])
-}
-
-model Credentials {
-  id           String @id
-  user         User   @relation(fields: [id], references: [id])
-  email        String @unique
-  passwordHash String
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
-model AuthProvider {
-  id String @id
-
-  type AuthProviderType
-  user User             @relation(fields: [id], references: [id])
-}
-
-enum AuthProviderType {
-  GOOGLE
-  CREDENTIALS
 }
