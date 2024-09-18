@@ -10,7 +10,7 @@ export async function POST(req: Request) {
   if (!parsedBody.success)
     return Response.json(parsedBody.error, { status: 400 });
 
-  const { email, password } = parsedBody.data;
+  const { name, email, password } = parsedBody.data;
 
   const existingUser = await db.user.findUnique({
     where: {
@@ -24,6 +24,7 @@ export async function POST(req: Request) {
 
   const createdUser = await db.user.create({
     data: {
+      name,
       email,
       password: hashedPassword,
     },
