@@ -1,12 +1,11 @@
 import dotenv from 'dotenv';
-import { parseEnv } from 'znv';
 import { z } from 'zod';
 
 dotenv.config();
 
-export const env = parseEnv(process.env, {
+const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']),
-  PORT: z.number().default(8089),
+  PORT: z.coerce.number().default(8000),
 
   DATABASE_URL: z.string(),
   CLIENT_URL: z.string(),
@@ -15,3 +14,13 @@ export const env = parseEnv(process.env, {
   ACCESS_TOKEN_SECRET: z.string(),
   REFRESH_TOKEN_SECRET: z.string(),
 });
+
+const parsedEnv = envSchema.safeParse(process.env);
+
+if (!parsedEnv.success) {
+  console.error('❌ Invalid environment variables:', parsedEnv.error.format());
+  console.log(`🚀🚀🚀NODE_ENV => ${process.env.NODE_ENV}`);
+  process.exit(1);
+}
+
+export const env = parsedEnv.data;
