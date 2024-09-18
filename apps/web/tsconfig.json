@@ -16,6 +16,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "verbatimModuleSyntax": true,
     "paths": {
       "@/*": ["./src/*"],
       "@/public": ["./public/*"]

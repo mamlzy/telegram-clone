@@ -59,6 +59,7 @@ module.exports = {
     ],
     'react-hooks/rules-of-hooks': 'off',
     'react/no-unescaped-entities': 'off',
+    'react/jsx-no-constructed-context-values': 'off',
     //! jsx-a11y
     'jsx-a11y/label-has-associated-control': 'off',
     //! tailwindcss
