@@ -7,12 +7,12 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production']),
   PORT: z.coerce.number().default(8000),
 
-  DATABASE_URL: z.string(),
-  CLIENT_URL: z.string(),
-  BASE_DOMAIN: z.string(),
+  DATABASE_URL: z.string().nonempty(),
+  CLIENT_URL: z.string().nonempty(),
+  BASE_DOMAIN: z.string().nonempty(),
 
-  ACCESS_TOKEN_SECRET: z.string(),
-  REFRESH_TOKEN_SECRET: z.string(),
+  ACCESS_TOKEN_SECRET: z.string().nonempty(),
+  REFRESH_TOKEN_SECRET: z.string().nonempty(),
 });
 
 const parsedEnv = envSchema.safeParse(process.env);

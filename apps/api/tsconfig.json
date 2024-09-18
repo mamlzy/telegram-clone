@@ -7,6 +7,7 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": true,
     "esModuleInterop": true,
     "composite": false,
     "declaration": true,
@@ -26,8 +27,5 @@
   },
   "include": ["./*.js", "src/**/*.ts", "src/**/*.tsx", ".eslintrc.cjs"],
   "exclude": ["node_modules"],
-  "files": ["src/types/express.d.ts"],
-  "ts-node": {
-    "esm": true
-  }
+  "files": ["src/types/express.d.ts"]
 }

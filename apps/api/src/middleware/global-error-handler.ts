@@ -1,21 +1,22 @@
 import { Prisma } from '@repo/db';
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
+import { z } from 'zod';
 
 import { config } from '@/config/index.js';
 
 export const globalErrorHandler = (
-  err: Error,
+  error: Error,
   _req: Request,
   res: Response,
   _next: NextFunction //! required even it's not used
 ) => {
-  const stack = config.isProd ? '🥞' : err.stack;
+  const stack = config.isProd ? '🥞' : error.stack;
   const statusCode = res.statusCode !== 200 ? res.statusCode : 500;
-  let message = err?.message || 'Something went wrong';
+  let message = error?.message || 'Something went wrong';
 
   //! prisma errors
-  if (err instanceof Prisma.PrismaClientKnownRequestError) {
-    switch (err.code) {
+  if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    switch (error.code) {
       case 'P1008':
         message = 'Operations timed out!';
         break;
@@ -24,7 +25,7 @@ export const globalErrorHandler = (
         break;
       case 'P2003':
         message = `Foreign key constraint failed on the field : ${
-          err.meta?.field_name
+          error.meta?.field_name
         }`;
         break;
       case 'P2025':
@@ -34,13 +35,26 @@ export const globalErrorHandler = (
     }
 
     return res.status(statusCode).json({
-      prismaStatusCode: err.code,
+      prismaStatusCode: error.code,
       message,
       stack,
     });
   }
 
-  //! rest errors
+  if (error instanceof z.ZodError) {
+    const zodErrors = error.errors.map((err) => ({
+      path: err.path.join('.'),
+      message: err.message,
+    }));
+
+    return res.status(400).json({
+      zodErrors,
+      message: 'Validation error.',
+      stack,
+    });
+  }
+
+  //! other errors
   return res.status(statusCode).json({
     message,
     stack,

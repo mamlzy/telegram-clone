@@ -1,5 +1,5 @@
-import { Request } from 'express';
-import { AnyZodObject, z, ZodArray, ZodEffects, ZodUndefined } from 'zod';
+import { type Request } from 'express';
+import { z, ZodArray, ZodEffects, ZodUndefined, type AnyZodObject } from 'zod';
 
 export const generateRequestSchema = <
   Params extends AnyZodObject | ZodUndefined,

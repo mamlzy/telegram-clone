@@ -1,9 +1,15 @@
-import { NextFunction, Request, Response } from 'express';
+import type { NextFunction, Request, Response } from 'express';
 
 // import { removeRequestFile } from './remove-request-file';
 
+type AsyncController = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => Promise<any>;
+
 export const tryCatch =
-  (controller: any) =>
+  (controller: AsyncController): AsyncController =>
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       await controller(req, res, next);
