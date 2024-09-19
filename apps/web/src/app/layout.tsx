@@ -1,6 +1,7 @@
 import '@/styles/globals.css';
 
 import { type Metadata } from 'next';
+import { SessionProvider } from '@/context/auth.context';
 
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
@@ -34,7 +35,9 @@ export default async function LocaleLayout({
           disableTransitionOnChange
         >
           <ReactQueryProvider>
-            <ProgressBarProvider>{children}</ProgressBarProvider>
+            <SessionProvider>
+              <ProgressBarProvider>{children}</ProgressBarProvider>
+            </SessionProvider>
           </ReactQueryProvider>
 
           <ToastContainer />

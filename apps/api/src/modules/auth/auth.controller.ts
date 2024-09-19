@@ -1,4 +1,5 @@
 import { db } from '@repo/db';
+import { COOKIE_NAMES } from '@repo/shared/constants';
 import { loginSchema, registerSchema } from '@repo/shared/schemas';
 import argon2 from 'argon2';
 import type { Request, Response } from 'express';
@@ -61,7 +62,7 @@ export const login = async (req: Request, res: Response) => {
     env.ACCESS_TOKEN_SECRET
   );
 
-  res.cookie('access-token', accessToken, {
+  res.cookie(COOKIE_NAMES.ACCESS_TOKEN, accessToken, {
     httpOnly: true,
     secure: config.isProd,
     maxAge: 1000 * 60 * 60 * 24 * 7,
@@ -71,4 +72,15 @@ export const login = async (req: Request, res: Response) => {
   return res.status(200).json({
     message: 'Login successful',
   });
+};
+
+export const me = async (req: Request, res: Response) => {
+  const { user } = req;
+
+  if (!user)
+    return res.status(401).json({
+      message: 'Unauthorized!',
+    });
+
+  return res.status(200).json(user);
 };

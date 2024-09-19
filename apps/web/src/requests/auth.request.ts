@@ -8,6 +8,13 @@ const login = async (payload: LoginSchema) => {
   return data;
 };
 
+const me = async () => {
+  const { data } = await api.get('/me');
+
+  return data;
+};
+
 export const authRequest = {
   login,
+  me,
 };

@@ -1,5 +1,5 @@
 'use client';
 
 export default function Page() {
-  return <div className='font-medium'>asd</div>;
+  return <main className=''>Home</main>;
 }
