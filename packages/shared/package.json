@@ -18,6 +18,10 @@
     "./constants": {
       "types": "./src/constants.ts",
       "default": "./dist/constants.js"
+    },
+    "./lib/prisma": {
+      "types": "./src/lib/prisma.ts",
+      "default": "./dist/lib/prisma.js"
     }
   },
   "scripts": {
