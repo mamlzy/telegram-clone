@@ -1,3 +1,5 @@
+export * from './user.type.js';
+
 export type UserSession = {
   id: string;
   name: string;

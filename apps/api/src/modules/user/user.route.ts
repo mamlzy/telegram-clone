@@ -6,7 +6,7 @@ import { getAll } from './user.controller.js';
 
 const router = Router();
 
-//! me
+//! get all
 router.get('/', authenticateUser, tryCatch(getAll));
 
 export default router;

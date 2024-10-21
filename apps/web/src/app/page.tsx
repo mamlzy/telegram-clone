@@ -1,10 +1,23 @@
 'use client';
 
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState, type Dispatch, type SetStateAction } from 'react';
+import { useSession } from '@/context/auth.context';
+import { conversationRequest } from '@/requests/conversation.request';
 import { userRequest } from '@/requests/user.request';
 import type { GetAllUserQuerySchema } from '@repo/shared/schemas';
-import { useQuery } from '@tanstack/react-query';
-import { ArrowLeftIcon, MenuIcon, SearchIcon, XIcon } from 'lucide-react';
+import type { UserWithoutPassword } from '@repo/shared/types';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  ArrowLeftIcon,
+  LoaderCircle,
+  LoaderCircleIcon,
+  MenuIcon,
+  SearchIcon,
+  XIcon,
+} from 'lucide-react';
+import { toast } from 'sonner';
 
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
@@ -19,19 +32,32 @@ import {
 } from '@/components/ui/sheet';
 
 export default function Page() {
-  const [search, setSearch] = useState('');
+  const { session } = useSession();
 
+  const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+
+  const conversationsQuery = useQuery({
+    enabled: !!session?.user?.id,
+    queryKey: ['conversations', session?.user?.id],
+    queryFn: () => conversationRequest.getAllByUserId(session?.user?.id!),
+  });
+
+  const closeSearchSheet = () => {
+    setSearch('');
+    setShowSearch(false);
+  };
 
   return (
     <main className='size-full bg-red-400/50'>
       <aside className='borde-r fixed h-full w-[420px] border bg-white dark:bg-[#212121]'>
+        {/* Search Input */}
         <div className='flex items-center px-4 py-2'>
           <Button
             variant='ghost'
             size='icon'
             className='mr-2 size-10 rounded-full !text-neutral-500'
-            onClick={showSearch ? () => setShowSearch(false) : undefined}
+            onClick={showSearch ? closeSearchSheet : undefined}
           >
             {showSearch ? <ArrowLeftIcon /> : <MenuIcon />}
           </Button>
@@ -59,14 +85,29 @@ export default function Page() {
           </div>
         </div>
 
+        {/* Search Sheet */}
         <SearchSheet
           open={showSearch}
           onOpenChange={setShowSearch}
           search={search}
+          closeSearchSheet={closeSearchSheet}
         />
 
         <div className='px-2 pb-2'>
-          <ChatListItem name='Telegram' />
+          {/* Chat List */}
+          {conversationsQuery.isPending && (
+            <div className='grid place-items-center'>
+              <LoaderCircleIcon className='size-7 animate-spin' />
+            </div>
+          )}
+          {conversationsQuery.data?.data.map((conversation) => {
+            const contact = conversation.conversationMembers.find(
+              (member) => member.userId !== session?.user?.id
+            );
+            return (
+              <ChatListItem key={conversation.id} name={contact?.user.name!} />
+            );
+          })}
         </div>
       </aside>
 
@@ -83,9 +124,20 @@ export default function Page() {
   );
 }
 
-function ChatListItem({ name }: { name: string }) {
+function ChatListItem({
+  name,
+  handleClick,
+  disabled,
+}: {
+  name: string;
+  handleClick?: () => void;
+  disabled?: boolean;
+}) {
   return (
-    <div className='flex h-[72px] cursor-pointer rounded-lg p-2 hover:bg-neutral-200 dark:hover:bg-neutral-700/60'>
+    <div
+      className='flex h-[72px] cursor-pointer rounded-lg p-2 hover:bg-neutral-200 dark:hover:bg-neutral-700/60'
+      onClick={disabled ? undefined : handleClick}
+    >
       <Avatar className='mr-2 size-[3.375rem] self-center'>
         <AvatarImage src='https://github.com/shadcn.png' />
         <AvatarFallback>CN</AvatarFallback>
@@ -108,19 +160,47 @@ function SearchSheet({
   open,
   onOpenChange,
   search,
+  closeSearchSheet,
 }: {
   open: boolean;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
   search: string;
+  closeSearchSheet: () => void;
 }) {
+  const qc = useQueryClient();
+  const { session } = useSession();
+
   const queryParams: GetAllUserQuerySchema = {
     name: search,
   };
   const usersQuery = useQuery({
-    enabled: !!search,
+    enabled: !!open,
     queryKey: ['users', queryParams],
     queryFn: () => userRequest.getAll(queryParams),
   });
+
+  const accessChatMutation = useMutation({
+    mutationFn: conversationRequest.acessChat,
+  });
+  const accessChat = (contact: UserWithoutPassword) => {
+    accessChatMutation.mutate(
+      {
+        user1Id: session?.user?.id!,
+        user2Id: contact.id,
+      },
+      {
+        onSuccess: (message) => {
+          closeSearchSheet();
+          qc.invalidateQueries({ queryKey: ['conversations'] });
+
+          toast.success(message);
+        },
+        onError: (err) => {
+          console.log('err =>', err);
+        },
+      }
+    );
+  };
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
@@ -141,10 +221,23 @@ function SearchSheet({
           <SheetDescription>Chat List</SheetDescription>
         </SheetHeader>
 
-        {!search && <div className='p-2'>Type something...</div>}
-        {usersQuery.data?.map((user) => (
-          <ChatListItem key={user.id} name={user.name} />
-        ))}
+        {usersQuery.data?.map((user) => {
+          if (user.id === session?.user?.id) return null;
+
+          return (
+            <ChatListItem
+              key={user.id}
+              name={user.name}
+              handleClick={() => accessChat(user)}
+            />
+          );
+        })}
+
+        {accessChatMutation.isPending && (
+          <div className='grid place-items-center'>
+            <LoaderCircle className='size-7 animate-spin' />
+          </div>
+        )}
       </SheetContent>
     </Sheet>
   );

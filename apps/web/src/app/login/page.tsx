@@ -1,5 +1,6 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { authRequest } from '@/requests/auth.request';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { loginSchema, type LoginSchema } from '@repo/shared/schemas';
@@ -13,6 +14,8 @@ import { Button } from '@/components/ui/button';
 import { Form } from '@/components/ui/form';
 
 export default function Page() {
+  const router = useRouter();
+
   const methods = useForm<LoginSchema>({
     defaultValues: {
       email: '',
@@ -26,11 +29,9 @@ export default function Page() {
   const loginMutation = useMutation({ mutationFn: authRequest.login });
 
   const onSubmit = (values: LoginSchema) => {
-    console.log('values =>', values);
-
     loginMutation.mutate(values, {
       onSuccess: () => {
-        console.log('Login success');
+        router.replace('/');
       },
     });
   };

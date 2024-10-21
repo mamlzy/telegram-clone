@@ -1,4 +1,5 @@
 import authRoutes from '@/modules/auth/auth.route.js';
+import conversationRoutes from '@/modules/conversation/conversation.route.js';
 import userRoutes from '@/modules/user/user.route.js';
 import { Router, type Response } from 'express';
 
@@ -13,5 +14,6 @@ router.get('/', (_, res: Response) => {
 
 router.use('/', authRoutes);
 router.use('/users', userRoutes);
+router.use('/conversations', conversationRoutes);
 
 export default router;
