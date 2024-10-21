@@ -1,6 +1,8 @@
 import url from 'url';
 import { globalErrorHandler } from '@/middleware/global-error-handler.js';
 import { notFound } from '@/middleware/not-found.js';
+import { auth } from '@repo/shared/lib/auth';
+import { toNodeHandler } from 'better-auth/node';
 import cookies from 'cookie-parser';
 import cors from 'cors';
 import dotenv from 'dotenv';
@@ -18,7 +20,14 @@ const app: ReturnType<typeof express> = express();
 
 //! middlewares
 app.use(express.static('public'));
-app.use(express.json());
+app.use((req, res, next) => {
+  if (!req.path.startsWith('/api/auth/')) {
+    express.json()(req, res, next);
+  } else {
+    next();
+  }
+});
+
 app.use(cookies());
 app.use(morgan('dev'));
 app.use(
@@ -34,6 +43,7 @@ app.get('/', (_, res) => {
     message: '✨👋🌎🌍🌏✨',
   });
 });
+app.all('/api/auth/*', toNodeHandler(auth));
 app.use('/api', api);
 
 //! error handlings

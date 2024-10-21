@@ -1,12 +1,12 @@
 import '@/styles/globals.css';
 
 import { type Metadata } from 'next';
-import { SessionProvider } from '@/context/auth.context';
 
 import { fontSans } from '@/lib/fonts';
 import { cn } from '@/lib/utils';
 import ProgressBarProvider from '@/components/providers/progress-bar-provider';
 import ReactQueryProvider from '@/components/providers/react-query-provider';
+import { SessionProvider } from '@/components/providers/session-provider';
 import { ThemeProvider } from '@/components/providers/theme-provider';
 import ToastContainer from '@/components/shared/toast-container';
 

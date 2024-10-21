@@ -9,18 +9,99 @@ datasource db {
 }
 
 model User {
-  id       String  @id @default(cuid())
-  name     String  @db.VarChar(255)
-  email    String  @unique
-  password String  @db.VarChar(255)
-  image    String? @db.Text
+  id            String  @id
+  name          String
+  email         String
+  emailVerified Boolean
+  image         String?
+  role          Role?   @relation(fields: [roleId], references: [id])
+  roleId        String?
 
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
+  createdAt DateTime
+  updatedAt DateTime
+
+  Session             Session[]
+  Account             Account[]
   conversationMembers ConversationMember[]
   messages            Message[]
 
+  @@unique([email])
   @@map("user")
+}
+
+model Role {
+  id   String @id @default(cuid())
+  name String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users      User[]
+  Permission Permission[]
+
+  @@map(name: "roles")
+}
+
+model Permission {
+  id     String           @id @default(cuid())
+  roleId String
+  action PermissionAction
+  model  PermissionModel
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  deletedAt DateTime?
+
+  role Role @relation(fields: [roleId], references: [id], onDelete: Cascade)
+
+  @@unique([roleId, action, model])
+  @@map("permissions")
+}
+
+enum PermissionAction {
+  CREATE
+  READ
+  UPDATE
+  DELETE
+}
+
+enum PermissionModel {
+  Conversation
+}
+
+model Session {
+  id        String   @id
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("session")
+}
+
+model Account {
+  id           String    @id
+  accountId    String
+  providerId   String
+  userId       String
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  accessToken  String?
+  refreshToken String?
+  idToken      String?
+  expiresAt    DateTime?
+  password     String?
+
+  @@map("account")
+}
+
+model Verification {
+  id         String   @id
+  identifier String
+  value      String
+  expiresAt  DateTime
+
+  @@map("verification")
 }
 
 model Conversation {

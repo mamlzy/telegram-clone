@@ -1,9 +1,9 @@
-import type { UserSessionJWT } from './index.ts';
+import type { User } from 'better-auth';
 
 declare global {
   namespace Express {
     export interface Request {
-      user?: UserSessionJWT;
+      user?: User;
     }
   }
 }

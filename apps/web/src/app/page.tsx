@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import { useState, type Dispatch, type SetStateAction } from 'react';
-import { useSession } from '@/context/auth.context';
 import { conversationRequest } from '@/requests/conversation.request';
 import { userRequest } from '@/requests/user.request';
 import type { GetAllUserQuerySchema } from '@repo/shared/schemas';
@@ -19,6 +18,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 
+import { useSession } from '@/lib/auth-client';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -32,7 +32,7 @@ import {
 } from '@/components/ui/sheet';
 
 export default function Page() {
-  const { session } = useSession();
+  const { data: session } = useSession();
 
   const [search, setSearch] = useState('');
   const [showSearch, setShowSearch] = useState(false);
@@ -168,7 +168,7 @@ function SearchSheet({
   closeSearchSheet: () => void;
 }) {
   const qc = useQueryClient();
-  const { session } = useSession();
+  const { data: session } = useSession();
 
   const queryParams: GetAllUserQuerySchema = {
     name: search,

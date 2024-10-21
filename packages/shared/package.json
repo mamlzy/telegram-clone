@@ -22,6 +22,14 @@
     "./lib/prisma": {
       "types": "./src/lib/prisma.ts",
       "default": "./dist/lib/prisma.js"
+    },
+    "./lib/auth": {
+      "types": "./src/lib/auth.ts",
+      "default": "./dist/lib/auth.js"
+    },
+    "./lib/auth-client": {
+      "types": "./src/lib/auth-client.ts",
+      "default": "./dist/lib/auth-client.js"
     }
   },
   "scripts": {
@@ -30,6 +38,7 @@
   },
   "dependencies": {
     "@repo/db": "workspace:*",
+    "better-auth": "0.5.2",
     "dotenv": "^16.4.5",
     "typescript": "^5.6.2",
     "zod": "^3.23.8"

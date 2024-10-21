@@ -7,6 +7,8 @@ export default defineConfig({
     'src/schemas/index.ts',
     'src/constants.ts',
     'src/lib/prisma.ts',
+    'src/lib/auth.ts',
+    'src/lib/auth-client.ts',
   ],
   format: ['esm'],
   outDir: 'dist',
